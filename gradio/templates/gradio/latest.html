@@ -1,0 +1,24 @@
+{% extends 'gradio/base.html' %}
+{% load static %}
+
+{% block title %}GRadio{% endblock %}
+
+{% block content %}
+<div class="item container container-padded">
+    {% for source in sources %}
+    <div class="item boxed">
+        <img src="{% static source.img %}" alt="{{ source.name }}" />
+        <div class="container container-vertical">
+            {% for track in source.tracks %}
+            <div class="item">
+                <audio preload="none" id="{{ source.id }}{{ forloop.counter0 }}">
+                    <source src="{{ track.url }}" />
+                </audio>
+                <button type="button" class="btn {{ source.id }}" onclick="GR.play('{{ source.id }}{{ forloop.counter0 }}')">{{ track.name }}</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -8,6 +8,12 @@ Website focused on making things easier for Grandpa.
 - `python manage.py migrate`
 - `python manage.py runserver`
 
+## Deploying
+- `pip install -r requirements.txt`
+- `cp gsite/local_settings_example.py gsite/local_settings.py`
+- Edit local_settings.py
+- `gunicorn gsite.wsgi`
+
 ## References
 - [django](https://www.djangoproject.com/) the web framework and its examples
 - [gitignore.io](https://www.gitignore.io/)

@@ -1,0 +1,92 @@
+html {
+    height:100%;
+    margin: 0;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    background-color: #161616;
+    color: #DDDDDD;
+    font-family: Arial, Verdana, sans-serif;
+    text-align: center;
+}
+
+img {
+    max-width: 10rem;
+    max-height: 10rem;
+}
+
+h1 {
+    
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 2.5em;
+}
+
+/* Flexboxes */
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: baseline;
+}
+
+.container-vertical {
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-padded {
+    padding: 1rem;
+}
+
+.container-padded>.item {
+    margin: 1rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+
+.item {
+    padding: 1rem;
+}
+
+/* Boxy */
+.boxed {
+    background-color: #88888810;
+    border-radius: 1rem;
+}
+
+/* Buttons */
+.btn {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #333333;
+    color: #EEEEEE;
+    border: 0px solid transparent;
+    padding: 1rem 2.5rem;
+    font-weight: bold;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    border-radius: 1rem;
+    outline: none;
+}
+
+.btn.rfa {
+    background-color: #158E45;
+}
+
+.btn.rfi {
+    background-color: #E2001A;
+}
+
+.btn.voa {
+    background-color: #0001CC;
+}
