@@ -14,7 +14,7 @@
                 <audio preload="none" id="{{ source.id }}{{ forloop.counter0 }}">
                     <source src="{{ track.url }}" />
                 </audio>
-                <button type="button" class="btn {{ source.id }}" onclick="GR.play('{{ source.id }}{{ forloop.counter0 }}')">{{ track.name }}</button>
+                <button type="button" class="btn {{ source.id }}" onclick="GR.play('{{ source.id }}{{ forloop.counter0 }}',this)">{{ track.name }}</button>
             </div>
             {% endfor %}
         </div>

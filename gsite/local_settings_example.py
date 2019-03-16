@@ -16,3 +16,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
 ]
+
+# Set your timezone
+TIME_ZONE = 'Australia/Perth'
