@@ -4,7 +4,7 @@ Website focused on making things easier for Grandpa.
 ## Running
 - `pip install -r requirements.txt`
 - `cp gsite/local_settings_example.py gsite/local_settings.py`
-- `export DJANGO_SETTINGS_MODULE=gsite.settings`
+- `export DJANGO_SETTINGS_MODULE=gsite.local_settings`
 - `python manage.py migrate`
 - `python manage.py runserver`
 
