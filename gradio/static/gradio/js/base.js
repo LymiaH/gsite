@@ -15,8 +15,21 @@ var gradio = function () {
       playing = null;
       playing_btn = null;
     } else {
-      // Start playing this new one
+      // Get player
       playing = document.getElementById(id);
+      // If it is a video element, check if there is a stream_src and bind it
+      if(playing.nodeName == "VIDEO") {
+        var stream_src = playing.getAttribute("stream_src")
+        if(stream_src) {
+          playing.removeAttribute("stream_src")
+          if(Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(stream_src);
+            hls.attachMedia(playing);
+          }
+        }
+      }
+      // Start playing this new one
       playing.play();
       if(btn) {
         playing_btn = btn;

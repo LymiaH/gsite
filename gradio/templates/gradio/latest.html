@@ -11,9 +11,13 @@
         <div class="container container-vertical">
             {% for track in source.tracks %}
             <div class="item">
+                {% if track.stream %}
+                <video preload="none" id="{{ source.id }}{{ forloop.counter0 }}" stream_src="{{ track.url }}"></video>
+                {% else %}
                 <audio preload="none" id="{{ source.id }}{{ forloop.counter0 }}">
                     <source src="{{ track.url }}" />
                 </audio>
+                {% endif %}
                 <button type="button" class="btn {{ source.id }}" onclick="GR.play('{{ source.id }}{{ forloop.counter0 }}',this)">{{ track.name }}</button>
             </div>
             {% endfor %}

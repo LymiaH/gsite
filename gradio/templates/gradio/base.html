@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="referrer" content="no-referrer" />
     <link rel="stylesheet" href="{% static 'gradio/css/base.css' %}" type="text/css" />
+    <script src="{% static 'gradio/js/hls.js' %}"></script>
     <script src="{% static 'gradio/js/base.js' %}"></script>
-    <script>var GR={}; gradio.call(GR)</script>
+    <script>var GR={}; gradio.call(GR);</script>
     {% block head %}{% endblock head %}
     <title>{% block title %}{% endblock title %}</title>
 </head>

@@ -7,7 +7,7 @@ import pytz
 import requests
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.timezone import localtime
 
 
@@ -77,6 +77,17 @@ def latest(request) -> HttpResponse:
     """
     Latest Broadcasts
     """
+    smtv = {
+        'id': 'smtv',
+        'name': 'Supreme Master TV',
+        'img': 'gradio/img/smtv.png',
+        'tracks': [{
+            'name': 'Live',
+            'datetime': localtime(datetime.datetime.now(tz=datetime.timezone.utc)),
+            'url': 'https://smtv.vo.llnwd.net/wse_us1/audio.m3u8',
+            'stream': True
+        }]
+    }
     rfa = {
         'id': 'rfa',
         'name': 'Radio Free Asia',
@@ -105,6 +116,9 @@ def latest(request) -> HttpResponse:
         ),
     }
     context = {
-        'sources': [rfa, rfi, voa],
+        'sources': [smtv, rfa, rfi, voa],
     }
     return render(request, 'gradio/latest.html', context)
+
+def smtv(request, path) -> HttpResponse:
+    return redirect('https://smtv.vo.llnwd.net/wse_us1/' + path)
