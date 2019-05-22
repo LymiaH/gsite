@@ -12,7 +12,8 @@
             {% for track in source.tracks %}
             <div class="item">
                 {% if track.stream %}
-                <video preload="none" id="{{ source.id }}{{ forloop.counter0 }}" stream_src="{{ track.url }}"></video>
+                <video preload="none" id="{{ source.id }}{{ forloop.counter0 }}" stream_src="{{ track.url }}" hidden>
+                </video>
                 {% else %}
                 <audio preload="none" id="{{ source.id }}{{ forloop.counter0 }}">
                     <source src="{{ track.url }}" />

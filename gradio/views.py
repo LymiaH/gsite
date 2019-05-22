@@ -119,6 +119,3 @@ def latest(request) -> HttpResponse:
         'sources': [smtv, rfa, rfi, voa],
     }
     return render(request, 'gradio/latest.html', context)
-
-def smtv(request, path) -> HttpResponse:
-    return redirect('https://smtv.vo.llnwd.net/wse_us1/' + path)
