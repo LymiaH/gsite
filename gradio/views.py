@@ -116,6 +116,11 @@ def latest(request) -> HttpResponse:
         ),
     }
     context = {
-        'sources': [smtv, rfa, rfi, voa],
+        'sources': [
+            rfa,
+            rfi,
+            voa,
+            smtv
+        ],
     }
     return render(request, 'gradio/latest.html', context)

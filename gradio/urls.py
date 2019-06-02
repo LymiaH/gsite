@@ -4,5 +4,5 @@ from gradio import views
 app_name = 'gradio'
 
 urlpatterns = [
-    path('', views.latest, name='latest')
+    path('', views.latest, name='latest'),
 ]

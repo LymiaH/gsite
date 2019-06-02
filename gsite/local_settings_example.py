@@ -19,3 +19,6 @@ ALLOWED_HOSTS = [
 
 # Set your timezone
 TIME_ZONE = 'Australia/Perth'
+
+# Static Files (only for deployment
+STATIC_ROOT= os.path.join(BASE_DIR, 'static/')

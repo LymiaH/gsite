@@ -22,10 +22,13 @@ var gradio = function () {
         var stream_src = playing.getAttribute("stream_src")
         if(stream_src) {
           playing.removeAttribute("stream_src")
+          // https://github.com/video-dev/hls.js#getting-started
           if(Hls.isSupported()) {
             var hls = new Hls();
             hls.loadSource(stream_src);
             hls.attachMedia(playing);
+          } else if (playing.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = stream_src;
           }
         }
       }
