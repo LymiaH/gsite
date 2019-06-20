@@ -5,6 +5,7 @@ from typing import Dict, List
 
 import pytz
 import requests
+import urllib3
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -43,10 +44,12 @@ def request_text(url: str) -> str:
             with open(cached[url], 'r', encoding='utf-8') as f:
                 return f.read()
 
+    urllib3.util.connection.HAS_IPV6 = False
     r = requests.get(
         url=url,
         headers={
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'
+            'Connection': 'close',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
         },
     )
     if not r.ok:
