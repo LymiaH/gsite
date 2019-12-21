@@ -1,14 +1,12 @@
-import re
-
 import datetime
+import re
 from typing import Dict, List, Callable
 
-import pytz
 import requests
 import urllib3
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.utils.timezone import localtime
 
 
@@ -25,6 +23,7 @@ def pretty_datetime(dt: datetime.datetime) -> str:
 
     # return '{dt.day}{ext} {dt:%b} {dt.hour}:{dt:%M}'.format(dt=dt, ext=ext)
     return '{dt.day}{ext} {dt:%H}:{dt:%M}'.format(dt=dt, ext=ext)
+
 
 def request_text(url: str) -> str:
     """
@@ -56,8 +55,10 @@ def request_text(url: str) -> str:
         return ""
     return r.text
 
+
 def match_group_to_url(m: re.match) -> str:
     return m.group()
+
 
 def retrieve_latest(url: str, pattern: str, match_to_url: Callable[[re.match], str] = match_group_to_url) -> List[Dict]:
     text = request_text(url)
@@ -65,7 +66,8 @@ def retrieve_latest(url: str, pattern: str, match_to_url: Callable[[re.match], s
     tracks = []
     for m in p.finditer(text):
         groups = m.groupdict()
-        dateutc = datetime.datetime(int(groups['year']), int(groups['month']), int(groups['day']), int(groups['hour']), int(groups['minute']), tzinfo=datetime.timezone.utc)
+        dateutc = datetime.datetime(int(groups['year']), int(groups['month']), int(groups['day']), int(groups['hour']),
+                                    int(groups['minute']), tzinfo=datetime.timezone.utc)
         datelocal = localtime(dateutc)
         tracks.append({
             'name': pretty_datetime(datelocal),
@@ -75,10 +77,12 @@ def retrieve_latest(url: str, pattern: str, match_to_url: Callable[[re.match], s
     tracks.sort(key=lambda x: x['datetime'], reverse=True)
     return tracks[:2]
 
+
 def match_escaped_to_url(m: re.match) -> str:
     groups = m.groupdict()
     escaped_url = groups['escaped_url']
     return escaped_url.replace('\\/', '/')
+
 
 def retrieve_rfi() -> List[Dict]:
     text = request_text('http://www.rfi.fr/vi/chương-trình')
@@ -86,7 +90,8 @@ def retrieve_rfi() -> List[Dict]:
     urls_to_check = []
     for m in p.finditer(text):
         groups = m.groupdict()
-        dateutc = datetime.datetime(int(groups['year']), int(groups['month']), int(groups['day']), int(groups['hour']), int(groups['minute']), tzinfo=datetime.timezone.utc)
+        dateutc = datetime.datetime(int(groups['year']), int(groups['month']), int(groups['day']), int(groups['hour']),
+                                    int(groups['minute']), tzinfo=datetime.timezone.utc)
         datelocal = localtime(dateutc)
         urls_to_check.append({
             'datetime': datelocal,
@@ -106,6 +111,7 @@ def retrieve_rfi() -> List[Dict]:
         tracks.extend(temp)
     tracks.sort(key=lambda x: x['datetime'], reverse=True)
     return tracks[:2]
+
 
 def latest(request) -> HttpResponse:
     """
