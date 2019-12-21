@@ -1,7 +1,7 @@
 import re
 
 import datetime
-from typing import Dict, List
+from typing import Dict, List, Callable
 
 import pytz
 import requests
@@ -56,11 +56,13 @@ def request_text(url: str) -> str:
         return ""
     return r.text
 
-def retrieve_latest(url:str, pattern:str) -> List[Dict]:
+def match_group_to_url(m: re.match) -> str:
+    return m.group()
+
+def retrieve_latest(url: str, pattern: str, match_to_url: Callable[[re.match], str] = match_group_to_url) -> List[Dict]:
     text = request_text(url)
     p = re.compile(pattern)
     tracks = []
-    i = 0
     for m in p.finditer(text):
         groups = m.groupdict()
         dateutc = datetime.datetime(int(groups['year']), int(groups['month']), int(groups['day']), int(groups['hour']), int(groups['minute']), tzinfo=datetime.timezone.utc)
@@ -68,13 +70,42 @@ def retrieve_latest(url:str, pattern:str) -> List[Dict]:
         tracks.append({
             'name': pretty_datetime(datelocal),
             'datetime': datelocal,
-            'url': m.group()
+            'url': match_to_url(m),
         })
-        i += 1
-        if i >= 2:
-            break
     tracks.sort(key=lambda x: x['datetime'], reverse=True)
-    return tracks
+    return tracks[:2]
+
+def match_escaped_to_url(m: re.match) -> str:
+    groups = m.groupdict()
+    escaped_url = groups['escaped_url']
+    return escaped_url.replace('\\/', '/')
+
+def retrieve_rfi() -> List[Dict]:
+    text = request_text('http://www.rfi.fr/vi/chương-trình')
+    p = re.compile('\/vi\/(?P<year>\d\d\d\d)(?P<month>\d\d)(?P<day>\d\d)-[%\-\w]+?-(?P<hour>\d\d)h(?P<minute>\d\d)-gmt')
+    urls_to_check = []
+    for m in p.finditer(text):
+        groups = m.groupdict()
+        dateutc = datetime.datetime(int(groups['year']), int(groups['month']), int(groups['day']), int(groups['hour']), int(groups['minute']), tzinfo=datetime.timezone.utc)
+        datelocal = localtime(dateutc)
+        urls_to_check.append({
+            'datetime': datelocal,
+            'url': 'http://www.rfi.fr' + m.group(),
+        })
+    urls_to_check.sort(key=lambda x: x['datetime'], reverse=True)
+    urls_to_check = urls_to_check[:2]
+    tracks = []
+    for u in urls_to_check:
+        print(u)
+        temp = retrieve_latest(
+            u['url'],
+            '\\"contentUrl\\":\\"(?P<escaped_url>https:\\\\/\\\\/aod-rfi\\.akamaized\\.net\\\\/rfi\\\\/vietnamien\\\\/audio\\\\/magazines\\\\/r001\\\\/(?P<hour>\\d+?)h(?P<minute>\\d+?)_-_(?P<endhour>\\d+?)h(?P<endminute>\\d+?)_gmt_(?P<year>\\d+?)(?P<month>\\d\\d)(?P<day>\\d\\d).mp3)\\"',
+            match_escaped_to_url,
+        )
+        print(temp)
+        tracks.extend(temp)
+    tracks.sort(key=lambda x: x['datetime'], reverse=True)
+    return tracks[:2]
 
 def latest(request) -> HttpResponse:
     """
@@ -104,10 +135,7 @@ def latest(request) -> HttpResponse:
         'id': 'rfi',
         'name': 'Radio France Internationale',
         'img': 'gradio/img/rfi.png',
-        'tracks': retrieve_latest(
-            'http://vi.rfi.fr/',
-            'http://telechargement\.rfi\.fr/rfi/vietnamien/audio/magazines/r001/(?P<hour>\d+?)h(?P<minute>\d+?)_-_(?P<endhour>\d+?)h(?P<endminute>\d+?)_gmt_(?P<year>\d+?)(?P<month>\d\d)(?P<day>\d\d).mp3',
-        ),
+        'tracks': retrieve_rfi(),
     }
     voa = {
         'id': 'voa',
