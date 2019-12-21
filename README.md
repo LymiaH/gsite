@@ -14,7 +14,7 @@ Website focused on making things easier for Grandpa.
 - `cp gsite/local_settings_example.py gsite/local_settings.py`
 - `python manage.py collectstatic --settings gsite.local_settings`
 - Edit local_settings.py
-- `gunicorn gsite.wsgi`
+- `gunicorn gsite.asgi:application -k uvicorn.workers.UvicornWorker`
 
 ## References
 - [django](https://www.djangoproject.com/) the web framework and its examples
