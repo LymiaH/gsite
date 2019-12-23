@@ -101,13 +101,11 @@ def retrieve_rfi() -> List[Dict]:
     urls_to_check = urls_to_check[:2]
     tracks = []
     for u in urls_to_check:
-        print(u)
         temp = retrieve_latest(
             u['url'],
             '\\"contentUrl\\":\\"(?P<escaped_url>https:\\\\/\\\\/aod-rfi\\.akamaized\\.net\\\\/rfi\\\\/vietnamien\\\\/audio\\\\/magazines\\\\/r001\\\\/(?P<hour>\\d+?)h(?P<minute>\\d+?)_-_(?P<endhour>\\d+?)h(?P<endminute>\\d+?)_gmt_(?P<year>\\d+?)(?P<month>\\d\\d)(?P<day>\\d\\d).mp3)\\"',
             match_escaped_to_url,
         )
-        print(temp)
         tracks.extend(temp)
     tracks.sort(key=lambda x: x['datetime'], reverse=True)
     return tracks[:2]
