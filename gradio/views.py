@@ -85,8 +85,8 @@ def match_escaped_to_url(m: re.match) -> str:
 
 
 def retrieve_rfi() -> List[Dict]:
-    text = request_text('http://www.rfi.fr/vi/chương-trình')
-    p = re.compile('\/vi\/(?P<year>\d\d\d\d)(?P<month>\d\d)(?P<day>\d\d)-[%\-\w]+?-(?P<hour>\d\d)h(?P<minute>\d\d)-gmt')
+    text = request_text('https://www.rfi.fr/vi/chương-trình')
+    p = re.compile(r'\/vi(?:\/[^\/\"]+?)*?\/[^\/\"]*?(?P<year>\d\d\d\d)(?P<month>\d\d)(?P<day>\d\d)[^\/\"]+?(?P<hour>\d\d)h(?P<minute>\d\d)[^\/\"]*?\/?(?=\")')
     urls_to_check = []
     for m in p.finditer(text):
         groups = m.groupdict()
@@ -95,7 +95,7 @@ def retrieve_rfi() -> List[Dict]:
         datelocal = localtime(dateutc)
         urls_to_check.append({
             'datetime': datelocal,
-            'url': 'http://www.rfi.fr' + m.group(),
+            'url': 'https://www.rfi.fr' + m.group(),
         })
     urls_to_check.sort(key=lambda x: x['datetime'], reverse=True)
     urls_to_check = urls_to_check[:2]
@@ -103,7 +103,7 @@ def retrieve_rfi() -> List[Dict]:
     for u in urls_to_check:
         temp = retrieve_latest(
             u['url'],
-            '\\"contentUrl\\":\\"(?P<escaped_url>https:\\\\/\\\\/aod-rfi\\.akamaized\\.net\\\\/rfi\\\\/vietnamien\\\\/audio\\\\/magazines\\\\/r001\\\\/(?P<hour>\\d+?)h(?P<minute>\\d+?)_-_(?P<endhour>\\d+?)h(?P<endminute>\\d+?)_gmt_(?P<year>\\d+?)(?P<month>\\d\\d)(?P<day>\\d\\d).mp3)\\"',
+            r'\"contentUrl\":\"(?P<escaped_url>https:\\\/\\\/aod-rfi\.akamaized\.net\\\/rfi\\\/vietnamien\\\/audio\\\/magazines\\\/r001\\\/(?P<hour>\d+?)h(?P<minute>\d+?)_-_(?P<endhour>\d+?)h(?P<endminute>\d+?)_gmt_(?P<year>\d+?)(?P<month>\d\d)(?P<day>\d\d)\.mp3)\"',
             match_escaped_to_url,
         )
         tracks.extend(temp)
@@ -122,7 +122,7 @@ def latest(request) -> HttpResponse:
         'tracks': [{
             'name': 'Live',
             'datetime': localtime(datetime.datetime.now(tz=datetime.timezone.utc)),
-            'url': 'https://smtv.vo.llnwd.net/wse_us1/audio.m3u8',
+            'url': 'https://cf-lbs.suprememastertv.com/audio.m3u8',
             'stream': True
         }]
     }
