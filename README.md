@@ -1,6 +1,10 @@
 # GSite
 Website focused on making things easier for Grandpa.
 
+## Example
+
+![GRadio: Podcast Aggregator](https://user-images.githubusercontent.com/13083365/110930604-45720280-8364-11eb-86cd-0d15e062e383.png)
+
 ## Running
 - `pip install -r requirements.txt`
 - `cp gsite/local_settings_example.py gsite/local_settings.py`
